@@ -6,6 +6,8 @@
 
 # Misc files to ignore
 .DS_Store
+
+# dotenv environment var files
 .env
 .env.local
 .env.development.local
@@ -13,7 +15,15 @@
 .env.production.local
 
 # Dependencies
-node_modules
+node_modules/
+
+# Eslint cache
+.eslintcache
 
 # Email testing related files
 templates/*.handlebars.json
+
+# Logs
+logs
+*.log
+npm-debug.log
