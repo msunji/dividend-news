@@ -39,4 +39,4 @@ async function getViewerLinks() {
   }
 }
 
-getViewerLinks();
+module.exports = getViewerLinks;
