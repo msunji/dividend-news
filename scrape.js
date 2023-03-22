@@ -4,7 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 // Start scraping
-async function scrape() {
+async function getViewerLinks() {
   try {
     const res = await axios.get(process.env.TEST_NEWS);
     const document = res.data;
@@ -23,6 +23,7 @@ async function scrape() {
       On days with no news, the number of table cells === 1
     */
     if ($divCells.length === 1) {
+      console.log("Nothing new to announce");
       return;
     }
     $divRows.each((index, row) => {
@@ -32,9 +33,10 @@ async function scrape() {
         }`
       );
     });
+    return newsLinks;
   } catch (err) {
     console.error(err);
   }
 }
 
-scrape();
+getViewerLinks();
