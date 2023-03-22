@@ -12,23 +12,26 @@ async function scrape() {
     // Load the document
     const $ = cheerio.load(document);
 
-    let popupLinks = [];
+    let newsLinks = [];
 
     // Select announcement table
     const $divRows = $("tbody tr");
     const $divCells = $("tbody tr td");
 
+    /*
+      Check if the number of cells is > 1
+      On days with no news, the number of table cells === 1
+    */
     if ($divCells.length === 1) {
       return;
     }
     $divRows.each((index, row) => {
-      popupLinks.push(
+      newsLinks.push(
         `https://edge.pse.com.ph/openDiscViewer.do?edge_no=${
           $(row).find("a").eq(1).attr("onclick").split("'")[1]
         }`
       );
     });
-    console.log(popupLinks);
   } catch (err) {
     console.error(err);
   }
