@@ -29,7 +29,7 @@ function sendEmail(announcementData) {
     // Use the Handlebars template we made earlier
     const template = handlebars.compile(emailTemplate);
     // Pass the data to the handlebars template
-    const msgBody = template({ data: announcementData });
+    const msgBody = template(announcementData);
 
     // Get list of recipients
     const recipientList = process.env.RECIPIENT_EMAILS.split(",");
