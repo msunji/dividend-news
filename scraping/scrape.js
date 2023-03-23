@@ -80,7 +80,7 @@ async function scrape() {
     date: dateToday,
     announcements
   };
-
+  // console.log("Announcements: ", announcementData);
   return announcementData;
 }
 
