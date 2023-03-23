@@ -5,8 +5,13 @@ const cheerio = require("cheerio");
 
 // Start scraping
 async function getViewerLinks() {
+  let dateTodayArr = new Date().toISOString().slice(0, 10).split("-");
+  let parsedDateToday = [...dateTodayArr.slice(1), dateTodayArr[0]].join("-");
+
   try {
-    const res = await axios.get(process.env.TEST_NEWS);
+    const res = await axios.get(
+      `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`
+    );
     const document = res.data;
 
     // Load the document
