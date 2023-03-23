@@ -1,3 +1,4 @@
+require("dotenv").config();
 const axios = require("axios");
 const cheerio = require("cheerio");
 const getViewerLinks = require("./getViewerLinks");
@@ -17,7 +18,7 @@ async function scrape() {
     // Select iframe element and get src
     const iframeSrc = $("#viewContents").attr("src");
     const iframeContent = await axios.get(
-      `https://edge.pse.com.ph/${iframeSrc}`
+      `${process.env.PSE_DOMAIN}/${iframeSrc}`
     );
     const iframeDoc = iframeContent.data;
 
@@ -54,8 +55,8 @@ async function scrape() {
     return announcement;
   });
   const announcements = await Promise.all(promises);
-
   console.log(announcements);
+  return announcements;
 }
 
 scrape();
