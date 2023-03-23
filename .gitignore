@@ -21,7 +21,7 @@ node_modules/
 .eslintcache
 
 # Email testing related files
-templates/*.handlebars.json
+sendMail/templates/*.handlebars.json
 
 # Logs
 logs
