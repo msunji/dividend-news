@@ -9,9 +9,10 @@ async function getViewerLinks() {
   let parsedDateToday = [...dateTodayArr.slice(1), dateTodayArr[0]].join("-");
 
   try {
-    const res = await axios.get(
-      `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`
-    );
+    // const res = await axios.get(
+    //   `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`
+    // );
+    const res = await axios.get(process.env.TEST_NO_NEWS);
     const document = res.data;
 
     // Load the document
@@ -28,8 +29,7 @@ async function getViewerLinks() {
       On days with no news, the number of table cells === 1
     */
     if ($divCells.length === 1) {
-      console.log("Nothing new to announce");
-      return;
+      return newsLinks;
     }
     $divRows.each((index, row) => {
       newsLinks.push(
