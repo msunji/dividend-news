@@ -9,10 +9,9 @@ async function getViewerLinks() {
   let parsedDateToday = [...dateTodayArr.slice(1), dateTodayArr[0]].join("-");
 
   try {
-    // const res = await axios.get(
-    //   `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`
-    // );
-    const res = await axios.get(process.env.TEST_NO_NEWS);
+    const res = await axios.get(
+      `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`
+    );
     const document = res.data;
 
     // Load the document
