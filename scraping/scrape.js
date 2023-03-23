@@ -3,49 +3,59 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const getViewerLinks = require("./getViewerLinks");
 
-async function scrape() {
+async function resolveValues(promisesToResolve) {
+  try {
+    const resolved = await Promise.all(promisesToResolve);
+    return resolved;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getIframeSrc() {
   const linksToScrape = await getViewerLinks();
   const promises = linksToScrape.map(async (link) => {
     const res = await axios.get(link);
-    const document = res.data;
-    const $ = cheerio.load(document);
+    const $popup = cheerio.load(res.data);
 
-    // Get details from news viewer popup
-    const company = $("#viewHeader h2").text();
-    const announcementDate = $("#viewHeader p").text().split(": ")[1];
-
-    // Get iframe content
     // Select iframe element and get src
-    const iframeSrc = $("#viewContents").attr("src");
-    const iframeContent = await axios.get(
-      `${process.env.PSE_DOMAIN}/${iframeSrc}`
-    );
-    const iframeDoc = iframeContent.data;
+    const src = $popup("#viewContents").attr("src");
+    return `${process.env.PSE_DOMAIN}/${src}`;
+  });
 
-    // Load iframe content
-    const $iframe = cheerio.load(iframeDoc);
+  return await resolveValues(promises);
+}
+
+async function scrape() {
+  const iframesToScrape = await getIframeSrc();
+  const promises = iframesToScrape.map(async (iframe) => {
+    const res = await axios.get(iframe);
+    const $iframe = cheerio.load(res.data);
 
     // Helper function for dealing with iframe data
-    function getIframeValue(cellValue) {
+    function getIframeCellValue(cellValue) {
       return $iframe(`th:contains('${cellValue}')`).next().text();
     }
 
     // Get data from iframe
+    // Company Name
+    const company = $iframe("#contentBox h1 span#companyName").text();
     // Ex-Date
     const exDate = $iframe("#remarkContents span").text().split(": ")[1];
 
     // Dividend Type
-    const divType = getIframeValue("Type (Regular or Special)");
+    const divType = getIframeCellValue("Type (Regular or Special)");
     // Amount of Cash div/share
-    const cashDivAmount = getIframeValue("Amount of Cash Dividend Per Share");
+    const cashDivAmount = getIframeCellValue(
+      "Amount of Cash Dividend Per Share"
+    );
     // Record Date
-    const recordDate = getIframeValue("Record Date");
+    const recordDate = getIframeCellValue("Record Date");
     // Payment Date
-    const paymentDate = getIframeValue("Payment Date");
+    const paymentDate = getIframeCellValue("Payment Date");
 
     const announcement = {
       company,
-      announcementDate,
       exDate,
       divType,
       cashDivAmount,
@@ -54,9 +64,7 @@ async function scrape() {
     };
     return announcement;
   });
-  const announcements = await Promise.all(promises);
-  console.log(announcements);
-  return announcements;
+  return await resolveValues(promises);
 }
 
 scrape();
