@@ -64,7 +64,24 @@ async function scrape() {
     };
     return announcement;
   });
-  return await resolveValues(promises);
+  const announcements = await resolveValues(promises);
+
+  // Get date today for reference purposes
+  const dateOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  };
+  const dateToday = new Date().toLocaleDateString("us-EN", dateOptions);
+
+  // Parse data
+  const announcementData = {
+    date: dateToday,
+    announcements
+  };
+
+  return announcementData;
 }
 
 scrape();
