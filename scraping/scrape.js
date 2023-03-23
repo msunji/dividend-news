@@ -84,4 +84,4 @@ async function scrape() {
   return announcementData;
 }
 
-scrape();
+module.exports = scrape;
