@@ -9,7 +9,7 @@ const RECIPIENT_EMAILS = defineSecret("RECIPIENT_EMAILS");
 
 // eslint-disable-next-line max-len
 exports.scheduledDivScraper = functions.runWith({secrets: [SENDGRID_API, RECIPIENT_EMAILS]}).pubsub
-    .schedule("19 16 * * 1-5").timeZone("Asia/Taipei").onRun(async () => {
+    .schedule("30 16 * * 1-5").timeZone("Asia/Taipei").onRun(async () => {
       try {
         const data = await scrape();
         sendMail(data);
