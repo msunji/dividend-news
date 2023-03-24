@@ -8,7 +8,7 @@ Announcements are made on weekdays - often during trading hours. As such, this s
 
 ## Tech Stack
 - Cheerio
-  - In the [previous iteration](https://github.com/msunji/puppeteer-dividends), I used Puppeteer, but ultimately, I didn't need something as complex as Puppeteer, so I went with Cheerio for this project.
+  - In the [previous iteration](https://github.com/msunji/puppeteer-dividends), I used Puppeteer, but decided I didn't need to use something that complex for this project, so I went with Cheerio for this iteration.
 - Axios
 - Node.js
 - Nodemailer and Sendgrid
