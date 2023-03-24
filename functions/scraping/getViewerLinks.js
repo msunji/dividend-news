@@ -35,7 +35,7 @@ async function getViewerLinks() {
     }
     $divRows.each((index, row) => {
       newsLinks.push(
-          `${process.env.PSE_DOMAIN}/openDiscViewer.do?edge_no=${
+          `https://edge.pse.com.ph/openDiscViewer.do?edge_no=${
             $(row).find("a").eq(1).attr("onclick").split("'")[1]
           }`,
       );
