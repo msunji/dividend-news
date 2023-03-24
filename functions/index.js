@@ -4,15 +4,12 @@ const sendMail = require("./sendMail/sendMail");
 const {defineSecret} = require("firebase-functions/params");
 
 // Define secrets
-const sendgridKey = defineSecret("SENDGRID_API");
-const recipientList = defineSecret("RECIPIENT_EMAILS");
-
-// // Define params
-// const
+const SENDGRID_API = defineSecret("SENDGRID_API");
+const RECIPIENT_EMAILS = defineSecret("RECIPIENT_EMAILS");
 
 // eslint-disable-next-line max-len
-exports.scheduledDivScraper = functions.runWith({secrets: [sendgridKey, recipientList]}).pubsub
-    .schedule("08 16 * * 1-5").timeZone("Asia/Taipei").onRun(async () => {
+exports.scheduledDivScraper = functions.runWith({secrets: [SENDGRID_API, RECIPIENT_EMAILS]}).pubsub
+    .schedule("19 16 * * 1-5").timeZone("Asia/Taipei").onRun(async () => {
       try {
         const data = await scrape();
         sendMail(data);
