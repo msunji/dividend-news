@@ -1,9 +1,23 @@
 const functions = require("firebase-functions");
+const scrape = require("./scraping/scrape");
+const sendMail = require("./sendMail/sendMail");
+const {defineSecret} = require("firebase-functions/params");
 
-// // Create and deploy your first functions
-// // https://firebase.google.com/docs/functions/get-started
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// Define secrets
+const sendgridKey = defineSecret("SENDGRID_API");
+const recipientList = defineSecret("RECIPIENT_EMAILS");
+
+// // Define params
+// const
+
+// eslint-disable-next-line max-len
+exports.scheduledDivScraper = functions.runWith({secrets: [sendgridKey, recipientList]}).pubsub
+    .schedule("08 16 * * 1-5").timeZone("Asia/Taipei").onRun(async () => {
+      try {
+        const data = await scrape();
+        sendMail(data);
+      } catch (err) {
+        console.error(err);
+      }
+      return null;
+    });
