@@ -12,6 +12,7 @@ async function getViewerLinks() {
 
   try {
     const res = await axios.get(
+        // eslint-disable-next-line max-len
         `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`,
     );
     const document = res.data;
@@ -36,7 +37,7 @@ async function getViewerLinks() {
       newsLinks.push(
           `${process.env.PSE_DOMAIN}/openDiscViewer.do?edge_no=${
             $(row).find("a").eq(1).attr("onclick").split("'")[1]
-          }`
+          }`,
       );
     });
     return newsLinks;
