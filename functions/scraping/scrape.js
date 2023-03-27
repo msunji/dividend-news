@@ -3,6 +3,11 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const getViewerLinks = require("./getViewerLinks");
 
+/**
+ * Resolves array of promises
+ * @param {arr} promisesToResolve Iterable of promises
+ * @return {Promise} resolved promises
+ */
 async function resolveValues(promisesToResolve) {
   try {
     const resolved = await Promise.all(promisesToResolve);
@@ -12,6 +17,10 @@ async function resolveValues(promisesToResolve) {
   }
 }
 
+/**
+ * Gets a list of iframe sources to scrape
+ * @return {arr} Get list of iframe sources per announcement
+ */
 async function getIframeSrc() {
   const linksToScrape = await getViewerLinks();
   const promises = linksToScrape.map(async (link) => {
@@ -26,13 +35,22 @@ async function getIframeSrc() {
   return await resolveValues(promises);
 }
 
+/**
+ * This is the main scraper
+ * - Scrapes values from iframe sources per announcement
+ * @return {obj} Object with scraped values
+ */
 async function scrape() {
   const iframesToScrape = await getIframeSrc();
   const promises = iframesToScrape.map(async (iframe) => {
     const res = await axios.get(iframe);
     const $iframe = cheerio.load(res.data);
 
-    // Helper function for dealing with iframe data
+    /**
+     * Gets table cell value from inside iframe
+     * @param {str} cellValue Cell or table row I want to scrape
+     * @return {str} Gets value associated with cell (sibling th elem)
+     */
     function getIframeCellValue(cellValue) {
       return $iframe(`th:contains('${cellValue}')`).next().text();
     }
@@ -47,7 +65,7 @@ async function scrape() {
     const divType = getIframeCellValue("Type (Regular or Special)");
     // Amount of Cash div/share
     const cashDivAmount = getIframeCellValue(
-      "Amount of Cash Dividend Per Share"
+        "Amount of Cash Dividend Per Share",
     );
     // Record Date
     const recordDate = getIframeCellValue("Record Date");
@@ -60,7 +78,7 @@ async function scrape() {
       divType,
       cashDivAmount,
       recordDate,
-      paymentDate
+      paymentDate,
     };
     return announcement;
   });
@@ -71,14 +89,14 @@ async function scrape() {
     weekday: "long",
     year: "numeric",
     month: "long",
-    day: "numeric"
+    day: "numeric",
   };
   const dateToday = new Date().toLocaleDateString("us-EN", dateOptions);
 
   // Parse data
   const announcementData = {
     date: dateToday,
-    announcements
+    announcements,
   };
   // console.log("Announcements: ", announcementData);
   return announcementData;

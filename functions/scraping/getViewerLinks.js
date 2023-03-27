@@ -3,21 +3,24 @@ require("dotenv").config();
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-// Start scraping
+/**
+ * @return {arr} Array of viewer popup urls
+ */
 async function getViewerLinks() {
-  let dateTodayArr = new Date().toISOString().slice(0, 10).split("-");
-  let parsedDateToday = [...dateTodayArr.slice(1), dateTodayArr[0]].join("-");
+  const dateTodayArr = new Date().toISOString().slice(0, 10).split("-");
+  const parsedDateToday = [...dateTodayArr.slice(1), dateTodayArr[0]].join("-");
 
   try {
     const res = await axios.get(
-      `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`
+        // eslint-disable-next-line max-len
+        `${process.env.PSE_NEWS}&fromDate=${parsedDateToday}&toDate=${parsedDateToday}`,
     );
     const document = res.data;
 
     // Load the document
     const $ = cheerio.load(document);
 
-    let newsLinks = [];
+    const newsLinks = [];
 
     // Select announcement table
     const $divRows = $("tbody tr");
@@ -32,9 +35,9 @@ async function getViewerLinks() {
     }
     $divRows.each((index, row) => {
       newsLinks.push(
-        `${process.env.PSE_DOMAIN}/openDiscViewer.do?edge_no=${
-          $(row).find("a").eq(1).attr("onclick").split("'")[1]
-        }`
+          `${process.env.PSE_DOMAIN}/openDiscViewer.do?edge_no=${
+            $(row).find("a").eq(1).attr("onclick").split("'")[1]
+          }`,
       );
     });
     return newsLinks;
