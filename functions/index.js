@@ -1,7 +1,28 @@
+const {initializeApp, applicationDefault, cert} = require("firebase-admin/app");
+const {getFirestore, Timestamp, FieldValue} = require("firebase-admin/firestore");
 const functions = require("firebase-functions");
 const scrape = require("./scraping/scrape");
 const sendMail = require("./sendMail/sendMail");
 const {defineSecret} = require("firebase-functions/params");
+
+// Initialise Firestore
+initializeApp({
+  projectId: "dividend-news",
+});
+const db = getFirestore();
+
+/**
+ * returns snapshot
+ */
+async function testDb() {
+  const snapshot = await db.collection("cash-dividends").get();
+  snapshot.forEach((doc) => {
+    console.log(doc.id, doc.data());
+  });
+  console.log(snapshot);
+}
+
+testDb();
 
 // Define secrets
 const SENDGRID_API = defineSecret("SENDGRID_API");
@@ -18,3 +39,13 @@ exports.scheduledDivScraper = functions.runWith({secrets: [SENDGRID_API, RECIPIE
       }
       return null;
     });
+
+exports.helloWorld = functions.https.onRequest(async (request, response) => {
+  response.send("Hello from Firebase!");
+  const snapshot = await db.collection("cash-dividends").get();
+  snapshot.forEach((doc) => {
+    console.log(doc.id, doc.data());
+  });
+  console.log("testing");
+  console.log(snapshot);
+});
