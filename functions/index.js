@@ -33,19 +33,25 @@ exports.scheduledDivScraper = functions.runWith({secrets: [SENDGRID_API, RECIPIE
     .schedule("30 16 * * 1-5").timeZone("Asia/Taipei").onRun(async () => {
       try {
         const data = await scrape();
+        const {date, announcements} = data;
         sendMail(data);
+        await db.collection("cash-dividends").doc().set({
+          date,
+          announcements,
+        });
       } catch (err) {
         console.error(err);
       }
       return null;
     });
 
-exports.helloWorld = functions.https.onRequest(async (request, response) => {
-  response.send("Hello from Firebase!");
-  const snapshot = await db.collection("cash-dividends").get();
-  snapshot.forEach((doc) => {
-    console.log(doc.id, doc.data());
-  });
-  console.log("testing");
-  console.log(snapshot);
-});
+// exports.helloWorld = functions.https.onRequest(async (request, response) => {
+//   response.send("Hello from Firebase!");
+//   try {
+//     const data = await scrape();
+//     const {date, announcements} = data;
+//   } catch (err) {
+//     console.error(err);
+//   }
+//   return null;
+// });
