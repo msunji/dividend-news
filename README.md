@@ -17,7 +17,7 @@ Announcements are made on weekdays - often during trading hours. As such, this s
 ## To Do
 - [x] Write scraping script with Cheerio
 - [x] Run scraper + email on a schedule
-- [ ] Add data layer
+- [x] Add data layer
 - [ ] (Would be nice) Send email alert when ex-date of a stock approaches
 
 ## Links
