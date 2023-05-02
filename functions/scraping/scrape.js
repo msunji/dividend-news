@@ -55,6 +55,10 @@ async function scrape() {
       return $iframe(`th:contains('${cellValue}')`).next().text();
     }
 
+    // eslint-disable-next-line max-len
+    const $securityListItem = $iframe("#contentBox ul.reportType li").eq(1);
+    const securityListCode = $securityListItem.find("span.valInput").text();
+
     // Get data from iframe
     // Company Name
     const company = $iframe("#contentBox h1 span#companyName").text();
@@ -79,6 +83,7 @@ async function scrape() {
       cashDivAmount,
       recordDate,
       paymentDate,
+      securityListCode,
     };
     return announcement;
   });
