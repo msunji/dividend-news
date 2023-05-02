@@ -34,11 +34,13 @@ exports.scheduledDivScraper = functions.runWith({secrets: [SENDGRID_API, RECIPIE
       try {
         const data = await scrape();
         const {date, announcements} = data;
-        sendMail(data);
-        await db.collection("cash-dividends").doc().set({
-          date,
-          announcements,
-        });
+        if (announcements.length) {
+          sendMail(data);
+          await db.collection("cash-dividends").doc().set({
+            date,
+            announcements,
+          });
+        }
       } catch (err) {
         console.error(err);
       }
