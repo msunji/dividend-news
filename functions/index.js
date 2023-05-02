@@ -1,5 +1,5 @@
-const {initializeApp, applicationDefault, cert} = require("firebase-admin/app");
-const {getFirestore, Timestamp, FieldValue} = require("firebase-admin/firestore");
+const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
 const functions = require("firebase-functions");
 const scrape = require("./scraping/scrape");
 const sendMail = require("./sendMail/sendMail");
